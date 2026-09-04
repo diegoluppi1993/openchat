@@ -1987,6 +1987,37 @@ export const turnstileSchema = z.object({
 
 export type TTurnstileConfig = z.infer<typeof turnstileSchema>;
 
+const brandingColorSchema = z.string().regex(/^#[0-9a-fA-F]{6}$/);
+
+export const brandingPaletteSchema = z.object({
+  primary: brandingColorSchema.optional(),
+  surface: brandingColorSchema.optional(),
+  text: brandingColorSchema.optional(),
+  secondaryText: brandingColorSchema.optional(),
+});
+
+const brandingAssetUrlSchema = z
+  .string()
+  .max(2048)
+  .refine(
+    (value) => value.startsWith('/') || value.startsWith('http://') || value.startsWith('https://'),
+    'Brand assets must use an absolute path or an HTTP(S) URL',
+  );
+
+export const brandingConfigSchema = z.object({
+  appTitle: z.string().trim().min(1).max(80).optional(),
+  welcomeMessage: z.string().trim().max(240).optional(),
+  footer: z.string().trim().max(500).optional(),
+  logoUrl: brandingAssetUrlSchema.optional(),
+  logoDarkUrl: brandingAssetUrlSchema.optional(),
+  faviconUrl: brandingAssetUrlSchema.optional(),
+  light: brandingPaletteSchema.optional(),
+  dark: brandingPaletteSchema.optional(),
+});
+
+export type TBrandingPalette = z.infer<typeof brandingPaletteSchema>;
+export type TBrandingConfig = z.infer<typeof brandingConfigSchema>;
+
 export type TRumConfig = {
   provider: 'hyperdx';
   enabled: boolean;
@@ -2013,6 +2044,7 @@ export type EndpointsDropParamsMap = Record<string, string[] | Record<string, st
 
 export type TStartupConfig = {
   appTitle: string;
+  branding?: TBrandingConfig;
   socialLogins?: string[];
   langfuseFanoutEnabled?: boolean;
   langfuseConnectionAccess?: boolean;
@@ -2119,7 +2151,7 @@ export type TSharedLinkStartupInterface = Pick<
 export type TSharedLinkStartupConfig = Pick<TStartupConfig, 'appTitle'> &
   Pick<
     Partial<TStartupConfig>,
-    'analyticsGtmId' | 'bundlerURL' | 'customFooter' | 'staticBundlerURL'
+    'analyticsGtmId' | 'branding' | 'bundlerURL' | 'customFooter' | 'staticBundlerURL'
   > & {
     interface?: TSharedLinkStartupInterface;
   };
@@ -2531,6 +2563,7 @@ export const configSchema = z.object({
   ocr: ocrSchema.optional(),
   webSearch: webSearchSchema.optional(),
   langfuse: langfuseConfigSchema.optional(),
+  branding: brandingConfigSchema.optional(),
   memory: memorySchema.optional(),
   summarization: summarizationConfigSchema.optional(),
   skillSync: skillSyncConfigSchema,

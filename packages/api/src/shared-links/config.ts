@@ -78,7 +78,8 @@ export function buildSharedLinkStartupPayload(
   env: SharedLinkStartupEnv = process.env,
 ): TSharedLinkStartupConfig {
   const payload: TSharedLinkStartupConfig = {
-    appTitle: env.APP_TITLE || 'LibreChat',
+    appTitle: appConfig?.branding?.appTitle ?? env.APP_TITLE ?? 'OpenChat',
+    branding: appConfig?.branding,
   };
 
   if (typeof env.ANALYTICS_GTM_ID === 'string') {
@@ -90,8 +91,9 @@ export function buildSharedLinkStartupPayload(
   if (typeof env.SANDPACK_STATIC_BUNDLER_URL === 'string') {
     payload.staticBundlerURL = env.SANDPACK_STATIC_BUNDLER_URL;
   }
-  if (typeof env.CUSTOM_FOOTER === 'string') {
-    payload.customFooter = env.CUSTOM_FOOTER;
+  const customFooter = appConfig?.branding?.footer ?? env.CUSTOM_FOOTER;
+  if (typeof customFooter === 'string') {
+    payload.customFooter = customFooter;
   }
 
   const { privacyPolicy, termsOfService } = appConfig?.interfaceConfig ?? {};

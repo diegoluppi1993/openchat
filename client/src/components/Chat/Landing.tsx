@@ -43,6 +43,16 @@ function getTextSizeClass(text: string | undefined | null) {
   return 'text-lg sm:text-base';
 }
 
+function getCustomWelcome(brandingWelcome?: string, interfaceWelcome?: string) {
+  if (typeof brandingWelcome === 'string') {
+    return brandingWelcome;
+  }
+  if (typeof interfaceWelcome === 'string') {
+    return interfaceWelcome;
+  }
+  return undefined;
+}
+
 export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: boolean }) {
   const { conversation } = useChatContext();
   const agentsMap = useAgentsMapContext();
@@ -102,10 +112,10 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
   const selectedAgent =
     isAgent && conversation?.agent_id != null ? agentsMap?.[conversation.agent_id] : undefined;
 
-  const customWelcome =
-    typeof startupConfig?.interface?.customWelcome === 'string'
-      ? startupConfig.interface.customWelcome
-      : undefined;
+  const customWelcome = getCustomWelcome(
+    startupConfig?.branding?.welcomeMessage,
+    startupConfig?.interface?.customWelcome,
+  );
 
   const scheduledGreeting = useGreeting(user?.name);
 

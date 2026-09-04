@@ -333,6 +333,20 @@ export const getStartupConfig = (
   return request.get(endpoints.config(options?.context));
 };
 
+export const getBrandingConfig = (): Promise<config.TBrandingConfig> => {
+  return request.get(endpoints.adminBranding());
+};
+
+export const updateBrandingConfig = (
+  branding: config.TBrandingConfig,
+): Promise<config.TBrandingConfig> => {
+  return request.put(endpoints.adminBranding(), branding);
+};
+
+export const resetBrandingConfig = (): Promise<config.TBrandingConfig> => {
+  return request.delete(endpoints.adminBranding());
+};
+
 export const getAIEndpoints = (): Promise<t.TEndpointsConfig> => {
   return request.get(endpoints.aiEndpoints());
 };

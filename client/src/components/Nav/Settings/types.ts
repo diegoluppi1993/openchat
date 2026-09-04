@@ -53,6 +53,7 @@ export interface SettingsContextValue {
   engineTTS: string;
   langfuseConnectionAccess: boolean;
   adminPanelURL: string;
+  brandingManagementEnabled: boolean;
 }
 
 export interface SettingEntry {

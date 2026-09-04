@@ -14,6 +14,7 @@ import { useMCPToolsQuery, useMCPServersQuery } from '~/data-provider';
 import { cleanupTimestampedStorage } from '~/utils/timestamps';
 import useSpeechSettingsInit from './useSpeechSettingsInit';
 import { useHasAccess, useCatalogReady } from '~/hooks';
+import useBranding from './useBranding';
 import store from '~/store';
 
 export default function useAppStartup({
@@ -23,6 +24,7 @@ export default function useAppStartup({
   startupConfig?: TStartupConfig;
   user?: TUser;
 }) {
+  useBranding(startupConfig?.branding);
   const [defaultPreset, setDefaultPreset] = useRecoilState(store.defaultPreset);
   const canUseMcp = useHasAccess({
     permissionType: PermissionTypes.MCP_SERVERS,
