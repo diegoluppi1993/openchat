@@ -62,6 +62,7 @@ export enum QueryKeys {
   health = 'health',
   userTerms = 'userTerms',
   banner = 'banner',
+  branding = 'branding',
   /* Memories */
   memories = 'memories',
   principalSearch = 'principalSearch',
@@ -105,6 +106,8 @@ export const DynamicQueryKeys = {
 } as const;
 
 export enum MutationKeys {
+  updateBranding = 'updateBranding',
+  resetBranding = 'resetBranding',
   subagentControl = 'subagentControl',
   enqueueAgentQueuedTurn = 'enqueueAgentQueuedTurn',
   cancelAgentQueuedTurn = 'cancelAgentQueuedTurn',

@@ -267,6 +267,32 @@ describe('GET /api/config', () => {
       expect(response.body).toHaveProperty('serverDomain');
     });
 
+    it('should use OpenChat as the default app title', async () => {
+      mockGetAppConfig.mockResolvedValue(baseAppConfig);
+      const app = createApp(null);
+
+      const response = await request(app).get('/api/config');
+
+      expect(response.body.appTitle).toBe('OpenChat');
+    });
+
+    it('should expose base branding on the login screen', async () => {
+      const branding = {
+        appTitle: 'OpenChat',
+        footer: '[Privacy](/privacy)',
+        logoUrl: '/assets/openchat.svg',
+        light: { primary: '#123456' },
+      };
+      mockGetAppConfig.mockResolvedValue({ ...baseAppConfig, branding });
+      const app = createApp(null);
+
+      const response = await request(app).get('/api/config');
+
+      expect(response.body.appTitle).toBe('OpenChat');
+      expect(response.body.branding).toEqual(branding);
+      expect(response.body.customFooter).toBe('[Privacy](/privacy)');
+    });
+
     it('should omit CloudFront cookie refresh from unauthenticated response (#12688)', async () => {
       mockGetAppConfig.mockResolvedValue(baseAppConfig);
       mockGetCloudFrontConfig.mockReturnValue({
@@ -309,6 +335,23 @@ describe('GET /api/config', () => {
   });
 
   describe('authenticated (req.user exists)', () => {
+    it('should expose effective branding and prefer its title and footer', async () => {
+      const branding = {
+        appTitle: 'OpenChat',
+        footer: '[Terms](/terms)',
+        welcomeMessage: 'Welcome, {{user.name}}!',
+      };
+      process.env.APP_TITLE = 'Environment title';
+      process.env.CUSTOM_FOOTER = 'Environment footer';
+      mockGetAppConfig.mockResolvedValue({ ...baseAppConfig, branding });
+      const app = createApp(mockUser);
+
+      const response = await request(app).get('/api/config');
+
+      expect(response.body.appTitle).toBe('OpenChat');
+      expect(response.body.customFooter).toBe('[Terms](/terms)');
+      expect(response.body.branding).toEqual(branding);
+    });
     it('should call getAppConfig with role, userId, and tenantId', async () => {
       mockGetAppConfig.mockResolvedValue(baseAppConfig);
       mockGetTenantId.mockReturnValue('fallback-tenant');

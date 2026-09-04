@@ -23,6 +23,7 @@ const settingsContext: SettingsContextValue = {
   engineTTS: 'browser',
   langfuseConnectionAccess: false,
   adminPanelURL: '',
+  brandingManagementEnabled: false,
 };
 
 describe('settings registry', () => {
@@ -86,6 +87,22 @@ describe('settings registry', () => {
           langfuseConnectionAccess: true,
         }),
       ).toBe(true);
+    });
+  });
+
+  describe('branding visibility', () => {
+    const brandingEntry = registry.find((entry) => entry.id === 'branding');
+
+    it('shows branding controls to administrators', () => {
+      expect(brandingEntry?.show?.({ ...settingsContext, brandingManagementEnabled: true })).toBe(
+        true,
+      );
+    });
+
+    it('hides branding controls from regular users', () => {
+      expect(brandingEntry?.show?.({ ...settingsContext, brandingManagementEnabled: false })).toBe(
+        false,
+      );
     });
   });
 

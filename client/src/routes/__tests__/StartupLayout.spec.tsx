@@ -14,6 +14,7 @@ jest.mock('~/data-provider', () => ({
 }));
 
 jest.mock('~/hooks', () => ({
+  useBranding: jest.fn(),
   useLocalize: jest.fn(() => (key: string) => key),
   TranslationKeys: {},
 }));

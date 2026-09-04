@@ -1,4 +1,5 @@
 export { createAdminConfigHandlers } from './config';
+export { createAdminBrandingHandlers } from './branding';
 export { createAdminLangfuseHandlers } from './langfuse';
 export { createAdminGrantsHandlers } from './grants';
 export { createAdminGroupsHandlers } from './groups';

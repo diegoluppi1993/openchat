@@ -43,6 +43,7 @@ import { TokenCredits, AutoRefill } from './BillingControls';
 import AdminPanel from '../SettingsTabs/General/AdminPanel';
 import SharedLinks from '../SettingsTabs/Data/SharedLinks';
 import ImageResize from '../SettingsTabs/Chat/ImageResize';
+import Branding from '../SettingsTabs/General/Branding';
 import { showThinkingAtom } from '~/store/showThinking';
 import ProviderKeys from '../SettingsTabs/ProviderKeys';
 import { autoScrollAtom } from '~/store/autoScroll';
@@ -174,6 +175,15 @@ export const registry: SettingEntry[] = [
     }),
   },
   // General · Admin
+  {
+    id: 'branding',
+    tab: GENERAL,
+    section: 'admin',
+    labelKey: 'com_ui_branding',
+    keywords: ['admin', 'brand', 'logo', 'color', 'welcome'],
+    Component: Branding,
+    show: (ctx) => ctx.brandingManagementEnabled,
+  },
   {
     id: 'adminPanel',
     tab: GENERAL,

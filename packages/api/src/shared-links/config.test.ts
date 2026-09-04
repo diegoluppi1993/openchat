@@ -105,6 +105,11 @@ describe('buildSharedLinkStartupPayload', () => {
   it('builds the share-view startup allowlist', () => {
     const payload = buildSharedLinkStartupPayload(
       appConfig({
+        branding: {
+          appTitle: 'OpenChat',
+          footer: 'Branded footer',
+          logoUrl: '/assets/openchat.svg',
+        },
         interfaceConfig: {
           privacyPolicy: { externalUrl: 'https://example.com/privacy' },
           termsOfService: { externalUrl: 'https://example.com/tos' },
@@ -121,11 +126,16 @@ describe('buildSharedLinkStartupPayload', () => {
     );
 
     expect(payload).toEqual({
-      appTitle: 'Test Chat',
+      appTitle: 'OpenChat',
+      branding: {
+        appTitle: 'OpenChat',
+        footer: 'Branded footer',
+        logoUrl: '/assets/openchat.svg',
+      },
       analyticsGtmId: 'GTM-XYZ',
       bundlerURL: 'https://bundler.example.com',
       staticBundlerURL: 'https://static-bundler.example.com',
-      customFooter: 'Shared footer',
+      customFooter: 'Branded footer',
       interface: {
         privacyPolicy: { externalUrl: 'https://example.com/privacy' },
         termsOfService: { externalUrl: 'https://example.com/tos' },
@@ -139,6 +149,6 @@ describe('buildSharedLinkStartupPayload', () => {
       {},
     );
 
-    expect(payload).toEqual({ appTitle: 'LibreChat' });
+    expect(payload).toEqual({ appTitle: 'OpenChat' });
   });
 });

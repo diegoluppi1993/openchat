@@ -633,6 +633,7 @@ if (cluster.isMaster) {
     app.use('/api/auth', preAuthTenantMiddleware, routes.auth);
     app.use('/api/admin/insights', routes.insights);
     app.use('/api/admin', routes.adminAuth);
+    app.use('/api/admin/branding', routes.adminBranding);
     app.use('/api/admin/skills', routes.adminSkills);
     app.use('/api/admin/code-environments', routes.adminCodeEnvironments);
     app.use('/api/code-environments', routes.codeEnvironments);

@@ -41,6 +41,7 @@ const buildQuery = (params: Record<string, unknown>): string => {
 };
 
 export const health = () => `${BASE_URL}/health`;
+export const adminBranding = () => `${BASE_URL}/api/admin/branding`;
 export const user = () => `${BASE_URL}/api/user`;
 export const userPreferences = () => `${user()}/preferences`;
 

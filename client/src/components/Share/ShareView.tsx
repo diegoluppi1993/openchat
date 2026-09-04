@@ -21,7 +21,7 @@ import {
 } from '@librechat/client';
 import SharedSubagentActivityDialog from '~/components/Chat/Subagents/SharedSubagentActivityDialog';
 import { cn, DEFAULT_APP_TITLE, getResponseStatus, selectActiveBranchTail } from '~/utils';
-import { useLocalize, useDocumentTitle, useAuthContext } from '~/hooks';
+import { useLocalize, useDocumentTitle, useAuthContext, useBranding } from '~/hooks';
 import { ThemeSelector, LangSelector } from '~/components/Appearance';
 import { ShareMessagesProvider } from './ShareMessagesProvider';
 import { useForkSharedConvoMutation } from '~/data-provider';
@@ -44,6 +44,7 @@ function SharedView() {
   const { theme, setTheme } = useContext(ThemeContext);
   const { shareId } = useParams();
   const { data: config } = useGetSharedStartupConfig(shareId, { enabled: isAuthReady });
+  useBranding(config?.branding);
   const { data, isLoading, isFetching, refetch } = useGetSharedMessages(shareId ?? '', {
     enabled: isAuthReady,
   });

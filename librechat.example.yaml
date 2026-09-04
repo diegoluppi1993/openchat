@@ -126,9 +126,28 @@ cache: true
 #         # first, or use a new source id for the new tenant.
 #         # tenantId: your-tenant-id
 
+# Global branding (can also be overridden from Admin > Branding)
+# branding:
+#   appTitle: 'OpenChat'
+#   welcomeMessage: 'Welcome, {{user.name}}!'
+#   footer: '[Privacy](https://example.com/privacy)'
+#   logoUrl: '/assets/logo.svg'
+#   logoDarkUrl: '/assets/logo-dark.svg'
+#   faviconUrl: '/assets/favicon-32x32.png'
+#   light:
+#     primary: '#126e6b'
+#     surface: '#ffffff'
+#     text: '#212121'
+#     secondaryText: '#424242'
+#   dark:
+#     primary: '#41a79d'
+#     surface: '#0d0d0d'
+#     text: '#ececec'
+#     secondaryText: '#cdcdcd'
+
 # Custom interface configuration
 interface:
-  customWelcome: 'Welcome to LibreChat! Enjoy your experience.'
+  customWelcome: 'Welcome to OpenChat! Enjoy your experience.'
   # Enable/disable file search as a chatarea selection (default: true)
   # Note: This setting does not disable the Agents File Search Capability.
   # To disable the Agents Capability, see the Agents Endpoint configuration instead.
