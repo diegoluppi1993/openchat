@@ -1,5 +1,6 @@
 const express = require('express');
 const {
+  reportLocatorTraversalFailure,
   isEnabled,
   GenerationJobManager,
   TERMINAL_PUBLICATION_RECONNECT_ERROR,
@@ -37,6 +38,7 @@ const {
 const SteerController = require('~/server/controllers/agents/steer');
 const {
   AgentQueuedTurnEnqueueController,
+  AgentQueuedTurnEnqueueV2Controller,
   AgentQueuedTurnListController,
   AgentQueuedTurnCancelController,
 } = require('~/server/controllers/agents/queuedTurns');
@@ -55,6 +57,7 @@ const {
 } = require('~/server/services/Schedules');
 const responses = require('./responses');
 const management = require('./management');
+const skills = require('./skills');
 const openai = require('./openai');
 const { v1 } = require('./v1');
 const chat = require('./chat');
@@ -127,6 +130,7 @@ router.use('/v1/responses', responses);
  * inherit execution authentication or API-key fallback behavior.
  */
 router.use('/v1/agents', management);
+router.use('/v1/skills', skills);
 
 /**
  * OpenAI-compatible API routes (API key authentication handled in route file)
@@ -771,6 +775,9 @@ router.post('/chat/abort', configMiddleware, async (req, res, next) => {
               // Source from the job: the stop request does not carry the
               // original temporary-chat flag.
               isTemporary: jobData?.isTemporary ?? req?.body?.isTemporary,
+              expiredAt: jobData?.retentionExpiresAt
+                ? new Date(jobData.retentionExpiresAt)
+                : undefined,
               interfaceConfig: req?.config?.interfaceConfig,
             };
             const requestMessage = {
@@ -1049,6 +1056,7 @@ router.post(
   configMiddleware,
   ...steerLimiters,
   createMessageFilterPii({
+    onTraversalFailure: reportLocatorTraversalFailure,
     getConfig: (req) => req.config?.messageFilter?.pii,
     getFilters: (req) => req.config?.filters,
     getFiles,
@@ -1069,6 +1077,7 @@ router.post(
   configMiddleware,
   ...steerLimiters,
   createMessageFilterPii({
+    onTraversalFailure: reportLocatorTraversalFailure,
     getConfig: (req) => req.config?.messageFilter?.pii,
     getFilters: (req) => req.config?.filters,
     getFiles,
@@ -1108,12 +1117,26 @@ router.post(
   configMiddleware,
   ...steerLimiters,
   createMessageFilterPii({
+    onTraversalFailure: reportLocatorTraversalFailure,
     getConfig: (req) => req.config?.messageFilter?.pii,
     getFilters: (req) => req.config?.filters,
     getFiles,
   }),
   moderateText,
   AgentQueuedTurnEnqueueController,
+);
+router.post(
+  '/chat/queued-turns/v2',
+  configMiddleware,
+  ...steerLimiters,
+  createMessageFilterPii({
+    onTraversalFailure: reportLocatorTraversalFailure,
+    getConfig: (req) => req.config?.messageFilter?.pii,
+    getFilters: (req) => req.config?.filters,
+    getFiles,
+  }),
+  moderateText,
+  AgentQueuedTurnEnqueueV2Controller,
 );
 /** Synchronizing durable queue state is read-only and polled while work is
  * pending. It must not consume the model-submission admission budget. */

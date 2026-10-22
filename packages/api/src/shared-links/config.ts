@@ -96,9 +96,11 @@ export function buildSharedLinkStartupPayload(
     payload.customFooter = customFooter;
   }
 
-  const { privacyPolicy, termsOfService } = appConfig?.interfaceConfig ?? {};
-  if (privacyPolicy || termsOfService) {
+  const { privacyPolicy, termsOfService, codeHighlightThrottleMs } =
+    appConfig?.interfaceConfig ?? {};
+  if (privacyPolicy || termsOfService || codeHighlightThrottleMs != null) {
     payload.interface = {
+      ...(codeHighlightThrottleMs != null ? { codeHighlightThrottleMs } : {}),
       ...(privacyPolicy ? { privacyPolicy } : {}),
       ...(termsOfService ? { termsOfService } : {}),
     };
